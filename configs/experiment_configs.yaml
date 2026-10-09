@@ -1,0 +1,74 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# PolyGEC v2 — Experiment Configuration
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# Used by run_all.sh to orchestrate training runs.
+# Transformer-only setup with 8×8 BPE tokenization grid.
+
+languages:
+  - english
+  - hindi
+  - tamil
+  - bengali
+  - russian
+  - turkish
+
+# Transformer-only architecture
+architectures:
+  - transformer
+
+# 8 BPE merge levels for the full grid
+bpe_merge_levels:
+  - { merges: 500,   label: "0.5K" }
+  - { merges: 1000,  label: "1K"   }
+  - { merges: 2000,  label: "2K"   }
+  - { merges: 4000,  label: "4K"   }
+  - { merges: 8000,  label: "8K"   }
+  - { merges: 16000, label: "16K"  }
+  - { merges: 25000, label: "25K"  }
+  - { merges: 32000, label: "32K"  }
+
+# 8×8 = 64 tokenization configs: source_bpe → target_bpe
+# Config names use K notation: "<src_label>_<tgt_label>"
+# e.g. "0.5K_1K" means source uses 500 merges, target uses 1000 merges.
+# Full grid is generated programmatically; representative examples:
+#   0.5K_0.5K, 0.5K_1K, ..., 0.5K_32K
+#   1K_0.5K,   1K_1K,   ..., 1K_32K
+#   ...
+#   32K_0.5K,  32K_1K,  ..., 32K_32K
+
+# Training hyperparameters (Transformer T4 config)
+training:
+  optimizer:         adam
+  batch_size:        128
+  num_workers:       4
+  max_epoch:         15
+  patience:          5        # early stopping patience
+  clip:              1.0      # gradient clipping
+  seed:              42
+  max_positions:     100
+  teacher_forcing:   0.5      # initial TF ratio; linearly annealed to 0
+
+# Transformer T4 architecture defaults
+arch_defaults:
+  transformer:
+    lr:                  1.0e-4
+    warmup_steps:        2000
+    label_smoothing:     0.1
+    scheduler:           noam
+    encoder_layers:      6
+    decoder_layers:      6
+    embed_dim:           512
+    ffn_dim:             2048
+    attention_heads:     8
+    dropout:             0.3
+    norm_first:          true   # Pre-LN for stability
+
+# Evaluation
+evaluation:
+  beam_size: 4                 # transformer uses beam search in generate.py
+  metrics:
+    - corpus_bleu
+    - token_accuracy
+    - gleu
+    - errant_f05

@@ -1,0 +1,25 @@
+# PolyGEC v2 — Dependencies
+# Install: pip install -r requirements.txt
+
+# Core deep learning
+torch>=2.0.0
+
+# BPE tokenization
+subword-nmt>=0.3.8
+
+# Evaluation metrics
+sacrebleu>=2.3.0          # Corpus BLEU
+gec-metrics>=0.1.1        # Official GLEU and ERRANT metrics
+# ERRANT's English scorer also needs the spaCy model:
+# python -m spacy download en_core_web_sm
+
+# Data / config
+pandas>=1.5.0
+pyyaml>=6.0
+numpy>=1.24.0
+
+# Progress bars
+tqdm>=4.65.0
+
+# HuggingFace tokenizers (optional BPE backend)
+tokenizers>=0.15.0

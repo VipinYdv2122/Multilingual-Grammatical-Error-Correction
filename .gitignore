@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch checkpoints and model weights
+*.pt
+*.pth
+*.ckpt
+*.bin
+checkpoints/
+
+# Datasets and large outputs
+data/
+outputs/
+logs/
+*.log
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE and agent metadata
+.vscode/
+.idea/
+.agents/
+.codex/
+*.swp
+.DS_Store
